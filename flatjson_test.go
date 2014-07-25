@@ -19,7 +19,7 @@ func TestBasicFlatten(t *testing.T) {
 		B string
 	}{10, "str"}
 
-	expected := flatjson.FlatMap{
+	expected := flatjson.Map{
 		"A": 10.0, // JSON numbers are all float64.
 		"B": "str",
 	}
@@ -34,7 +34,7 @@ func TestEmbeddedFlatten(t *testing.T) {
 		A     int
 	}{}
 
-	expected := flatjson.FlatMap{
+	expected := flatjson.Map{
 		"A":        0.0,
 		"CC":       0.0,
 		"CD":       "",
@@ -59,7 +59,7 @@ func TestIndirection(t *testing.T) {
 		Other2: &o2,
 	}
 
-	expected := flatjson.FlatMap{
+	expected := flatjson.Map{
 		"CC":    1.0,
 		"CD":    "2",
 		"O1.CC": 3.0,
@@ -71,7 +71,7 @@ func TestIndirection(t *testing.T) {
 	testFlattening(t, val, expected)
 }
 
-func testFlattening(t *testing.T, val interface{}, expected flatjson.FlatMap) {
+func testFlattening(t *testing.T, val interface{}, expected flatjson.Map) {
 	flat := flatjson.Flatten(val)
 
 	enc, err := json.Marshal(flat)
@@ -79,7 +79,7 @@ func testFlattening(t *testing.T, val interface{}, expected flatjson.FlatMap) {
 		t.Fatal(err)
 	}
 
-	got := flatjson.FlatMap{}
+	got := flatjson.Map{}
 	err = json.Unmarshal(enc, &got)
 	if err != nil {
 		t.Fatal(err)

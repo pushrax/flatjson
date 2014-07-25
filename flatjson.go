@@ -13,10 +13,10 @@ import (
 	"strings"
 )
 
-type FlatMap map[string]interface{}
+type Map map[string]interface{}
 
-// Flatten returns the FlatMap representation of val.
-func Flatten(val interface{}) FlatMap {
+// Flatten returns the Map representation of val.
+func Flatten(val interface{}) Map {
 	return flattenValue(reflect.ValueOf(val))
 }
 
@@ -56,7 +56,7 @@ func extractValue(val, fallback reflect.Value) reflect.Value {
 	}
 }
 
-func recursiveFlatten(val reflect.Value, prefix string, output FlatMap) int {
+func recursiveFlatten(val reflect.Value, prefix string, output Map) int {
 	valType := val.Type()
 	added := 0
 
@@ -91,7 +91,7 @@ func recursiveFlatten(val reflect.Value, prefix string, output FlatMap) int {
 	return added
 }
 
-func flattenValue(val reflect.Value) FlatMap {
+func flattenValue(val reflect.Value) Map {
 	if val.Kind() == reflect.Ptr {
 		return flattenValue(val.Elem())
 	}
@@ -100,7 +100,7 @@ func flattenValue(val reflect.Value) FlatMap {
 		panic("must be called with a struct type")
 	}
 
-	m := FlatMap{}
+	m := Map{}
 	recursiveFlatten(val, "", m)
 	return m
 }
