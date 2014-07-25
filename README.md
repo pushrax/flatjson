@@ -8,8 +8,8 @@ Example use case:
 ```json
 {
   "Connections" {
-    "Open": 1,
-    "Accepted": 3
+    "Open": 2,
+    "Accepted": 4
   },
   "ResponseTime": {
     "P50": 0.045775,
@@ -30,12 +30,12 @@ Example use case:
     }
   },
   "Memory": {
-    "Alloc": 840464,
-    "TotalAlloc": 961704,
-    "Sys": 5310712,
-    "Lookups": 231,
-    "Mallocs": 3120,
-    "Frees": 473
+    "Alloc": 682208,
+    "TotalAlloc": 1032488,
+    "Sys": 5441784,
+    "Lookups": 28,
+    "Mallocs": 3326,
+    "Frees": 2567
   }
 }
 ```

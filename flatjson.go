@@ -78,12 +78,11 @@ func recursiveFlatten(val reflect.Value, prefix string, output Map) int {
 
 		if childType.PkgPath != "" || (key == "" && !anonymous) {
 			continue
+		} else if !anonymous {
+			childPrefix = prefix + key + "."
 		}
 
 		child = extractStruct(child, child)
-		if !anonymous {
-			childPrefix = prefix + key + "."
-		}
 
 		if child.Kind() == reflect.Struct {
 			childAdded := recursiveFlatten(child, childPrefix, output)
