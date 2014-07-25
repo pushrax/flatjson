@@ -85,17 +85,17 @@ func TestDeepNesting(t *testing.T) {
 }
 
 type TL1 struct {
-	L2 `json:"l2"`
+	L2 `json:"L2"`
 }
 type TL0 struct {
-	TL1 `json:"l1"`
+	TL1 `json:"L1"`
 }
 
 func TestDeepTagNesting(t *testing.T) {
 	val := &TL0{}
 	val.A = "abc"
 
-	expected := flatjson.Map{"l1.l2.A": "abc"}
+	expected := flatjson.Map{"L1.L2.A": "abc"}
 	testFlattening(t, val, expected)
 }
 

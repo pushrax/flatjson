@@ -72,7 +72,7 @@ func recursiveFlatten(val reflect.Value, prefix string, output Map) int {
 	for i := 0; i < val.NumField(); i++ {
 		child := val.Field(i)
 		childType := valType.Field(i)
-		childPrefix := ""
+		childPrefix := prefix
 
 		key, anonymous := keyForField(childType, child)
 
