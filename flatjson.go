@@ -17,7 +17,16 @@ type Map map[string]interface{}
 
 // Flatten returns the Map representation of val.
 func Flatten(val interface{}) Map {
-	return flattenValue(reflect.ValueOf(val))
+	rval := reflect.ValueOf(val)
+	rval = extractStruct(rval, rval)
+
+	if rval.Kind() != reflect.Struct {
+		panic("Flatten: must be called with a struct type")
+	}
+
+	m := Map{}
+	recursiveFlatten(rval, "", m)
+	return m
 }
 
 func keyForField(field reflect.StructField, v reflect.Value) (string, bool) {
@@ -43,14 +52,14 @@ func keyForField(field reflect.StructField, v reflect.Value) (string, bool) {
 	return field.Name, false
 }
 
-func extractValue(val, fallback reflect.Value) reflect.Value {
+func extractStruct(val, fallback reflect.Value) reflect.Value {
 	switch val.Kind() {
 	case reflect.Struct:
 		return val
 	case reflect.Ptr:
-		return extractValue(val.Elem(), fallback)
+		return extractStruct(val.Elem(), fallback)
 	case reflect.Interface:
-		return extractValue(val.Elem(), fallback)
+		return extractStruct(val.Elem(), fallback)
 	default:
 		return fallback
 	}
@@ -71,7 +80,7 @@ func recursiveFlatten(val reflect.Value, prefix string, output Map) int {
 			continue
 		}
 
-		child = extractValue(child, child)
+		child = extractStruct(child, child)
 		if !anonymous {
 			childPrefix = prefix + key + "."
 		}
@@ -89,20 +98,6 @@ func recursiveFlatten(val reflect.Value, prefix string, output Map) int {
 	}
 
 	return added
-}
-
-func flattenValue(val reflect.Value) Map {
-	if val.Kind() == reflect.Ptr {
-		return flattenValue(val.Elem())
-	}
-
-	if val.Kind() != reflect.Struct {
-		panic("must be called with a struct type")
-	}
-
-	m := Map{}
-	recursiveFlatten(val, "", m)
-	return m
 }
 
 func isEmptyValue(v reflect.Value) bool {

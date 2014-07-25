@@ -71,6 +71,25 @@ func TestIndirection(t *testing.T) {
 	testFlattening(t, val, expected)
 }
 
+func TestValidInputs(t *testing.T) {
+	val := &struct{ A int }{10}
+	expected := flatjson.Map{"A": 10.0}
+
+	testFlattening(t, val, expected)
+	testFlattening(t, &val, expected)
+}
+
+func TestInvalidInputs(t *testing.T) {
+	defer func() {
+		if recover() == nil {
+			t.Errorf("Expected panic")
+		}
+	}()
+
+	val := struct{ A int }{10}
+	testFlattening(t, val, flatjson.Map{})
+}
+
 func testFlattening(t *testing.T, val interface{}, expected flatjson.Map) {
 	flat := flatjson.Flatten(val)
 
