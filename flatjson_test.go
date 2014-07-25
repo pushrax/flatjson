@@ -80,13 +80,18 @@ func TestValidInputs(t *testing.T) {
 }
 
 func TestInvalidInputs(t *testing.T) {
+	testPanic(t, struct{ A int }{})
+	testPanic(t, 123)
+	testPanic(t, "abc")
+}
+
+func testPanic(t *testing.T, val interface{}) {
 	defer func() {
 		if recover() == nil {
-			t.Errorf("Expected panic")
+			t.Errorf("Expected panic for input %#v\n", val)
 		}
 	}()
 
-	val := struct{ A int }{10}
 	testFlattening(t, val, flatjson.Map{})
 }
 
