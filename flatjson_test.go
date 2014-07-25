@@ -71,6 +71,34 @@ func TestIndirection(t *testing.T) {
 	testFlattening(t, val, expected)
 }
 
+type L3 struct{ A string }
+type L2 struct{ L3 }
+type L1 struct{ L2 }
+type L0 struct{ L1 }
+
+func TestDeepNesting(t *testing.T) {
+	val := &L0{}
+	val.A = "abc"
+
+	expected := flatjson.Map{"A": "abc"}
+	testFlattening(t, val, expected)
+}
+
+type TL1 struct {
+	L2 `json:"l2"`
+}
+type TL0 struct {
+	TL1 `json:"l1"`
+}
+
+func TestDeepTagNesting(t *testing.T) {
+	val := &TL0{}
+	val.A = "abc"
+
+	expected := flatjson.Map{"l1.l2.A": "abc"}
+	testFlattening(t, val, expected)
+}
+
 func TestValidInputs(t *testing.T) {
 	val := &struct{ A int }{10}
 	expected := flatjson.Map{"A": 10.0}
